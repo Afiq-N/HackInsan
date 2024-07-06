@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title aria-setsize="1000">Insurance Chatbot Z</title>
+</head>
+<body>
+    <h1>Insurance Chatbot Z</h1>
+    <div id="chatbox"></div>
+    <form id="message-form">
+        <input type="text" id="user-input" placeholder="Enter your message...">
+        <button type="submit">Send</button>
+    </form>
+
+    <script>
+        const form = document.getElementById("message-form");
+        const chatbox = document.getElementById("chatbox");
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const user_input = document.getElementById("user-input").value;
+            const response = await fetch("/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `user_input=${encodeURIComponent(user_input)}`,
+            }).then(response => response.json());
+
+            const message = document.createElement("p");
+            message.innerHTML = `<strong>You:</strong> ${user_input}`;
+            chatbox.appendChild(message);
+
+            const botResponse = document.createElement("p");
+            botResponse.innerHTML = `<strong>Bot:</strong> ${response.response}`;
+            chatbox.appendChild(botResponse);
+
+            document.getElementById("user-input").value = "";
+        });
+    </script>
+</body>
+</html>
